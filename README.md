@@ -6,10 +6,10 @@ docker-compose up -d // setup localhost:8005
 ## use
 
 ### Get create:
-   <!-- [host]/elementor/create -->
+    soon - [host]/elementor/create
 ### Get content:
     [host]/elementor/content/%id%
 ### Get edit:
-   <!--  [host]/elementor/edit/%id% -->
+    soon - [host]/elementor/edit/%id%
 ### Get delete:
-   <!-- [host]/elementor/delete/%id% -->
+    soon - [host]/elementor/delete/%id%
