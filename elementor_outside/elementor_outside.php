@@ -25,11 +25,12 @@ function elementor_outside() {
 	add_permastruct('elementor_content','/elementor/content/%post_id%',false);
 	add_permastruct('elementor_edit','elementor/edit/%post_id%',false);
 	add_permastruct('elementor_preview','elementor/preview/%post_id%',false);
-	// add_permastruct('elementor_create','elementor/create',false);
+	add_permastruct('elementor_delete','elementor/delete/%post_id%',false);
+	add_permastruct('elementor_create','elementor/create',false);
 	add_permastruct('elementor_update','elementor/update/',false);
 
 	// add_rewrite_rule('^elementor/content/([0-9]+)/?', 'index.php?elementor_content=$matches[1]&page_id=$matches[1]', 'top');
-	add_rewrite_rule('^elementor/create', 'wp-admin/edit.php?action=elementor_new_post&post_type=page', 'top');
+	// add_rewrite_rule('^elementor/create', 'wp-admin/edit.php?action=elementor_new_post&post_type=page', 'top');
 	// add_rewrite_rule('^elementor/edit/([0-9]+)/?', 'wp-admin/post.php?post=$matches[1]&action=elementor', 'top');
 	// add_rewrite_rule('^elementor/update', 'admin-ajax.php', 'top');
 	// add_rewrite_rule('^elementor/preview/([0-9]+)/?', 'index.php?page_id=$matches[1]&preview=true', 'top');
