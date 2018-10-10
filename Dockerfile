@@ -67,8 +67,6 @@ ENV WORDPRESS_SHA1 0945bab959cba127531dceb2c4fed81770812b4f
 # ENV WORDPRESS_DB_USER wordpress
 # ENV WORDPRESS_DB_PASSWORD wordpress
 
-ENV WORDPRESS_CLIENT_PROXY "/wp"
-
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \

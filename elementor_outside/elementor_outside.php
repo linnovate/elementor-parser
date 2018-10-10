@@ -52,9 +52,6 @@ function elementor_outside_init() {
 //     }
 
 //    $current_user = wp_get_current_user(); 
-// 	define('WP_SITEURL',"/wp");
-// 	update_option( 'siteurl', 'http://localhost:8005/' );
-	update_option( 'siteurl', 'http://localhost:3001/wp' );
 
 	// remove the admin_bar 
 	// add_filter( 'show_admin_bar', '__return_false' );

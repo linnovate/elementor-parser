@@ -20,14 +20,13 @@ services:
        - "8005:80"
      volumes:
       #- ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - ./plugins:/var/www/html/wp-content/plugins
-      - ./wp-admin:/var/www/html/wp-admin
+      #- ./plugins:/var/www/html/wp-content/plugins
+      #- ./wp-admin:/var/www/html/wp-admin
       - ./elementor_outside:/var/www/html/wp-content/plugins/elementor_outside
      restart: always
      environment:
        WORDPRESS_DB_HOST: db:3306
        WORDPRESS_DB_USER: wordpress
        WORDPRESS_DB_PASSWORD: wordpress
-       # WORDPRESS_CLIENT_PROXY: /wp
 volumes:
     db_data:

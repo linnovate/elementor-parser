@@ -4,8 +4,10 @@ const UrlPattern = require('url-pattern');
 function ElementorContent(options) {
 
     const defaultOption = {
-        proxyTarget: null,
-        proxyPath: "/wp",
+        target: null,
+        prefix: /^\/wp\/(.*)$/,
+        prefixRedirect: "/wp",
+        redirects: [],
         addPath: "/content/add",
         editPath: "/content/:id/edit",
         viewPath: "/content/:id",
@@ -13,8 +15,8 @@ function ElementorContent(options) {
 
     options = Object.assign({}, defaultOption, options);
 
-    if (!options.proxyTarget) {
-        console.log("The options 'proxyTarget' is empty!");
+    if (!options.target) {
+        console.log("The options 'target' is empty!");
         return;
     }
 
@@ -26,27 +28,41 @@ function ElementorContent(options) {
             return new UrlPattern(url).match(req.originalUrl);
         }
 
-        function proxy(url) {
+        function proxy(uri) {
             return request({
-                baseUrl: options.proxyTarget,
-                url
+                baseUrl: options.target,
+                uri,
+                jar: true,
+                method: req.method
             }, function(error, response, body) {
+                const regExp = new RegExp(options.target,"g");
+                body = body ? body.replace(regExp, options.prefixRedirect) : '';
                 res.send(body)
             });
         }
 
-        if (filter(options.proxyPath + '/*') || filter(options.proxyPath)) {
-            const url = req.originalUrl.replace(options.proxyPath, '');
-            return proxy(url);
-        } else if (filter(options.addPath)) {
-            return res.redirect(`${options.proxyPath}/wp-admin/edit.php?action=elementor_outside_new_post`);
-        } else if (params = filter(options.editPath)) {
-            return res.redirect(`${options.proxyPath}/wp-admin/post.php?post=${params.id}&action=elementor`);
-        } else if (params = filter(options.viewPath)) {
+        // Add content
+        if (filter(options.addPath)) {
+            return res.redirect(`${options.prefixRedirect}/wp-admin/edit.php?action=elementor_outside_new_post`);
+        }
+        // Edit content
+        else if (params = filter(options.editPath)) {
+            return res.redirect(`${options.prefixRedirect}/wp-admin/post.php?post=${params.id}&action=elementor`);
+        }
+        // View content
+        else if (params = filter(options.viewPath)) {
             return proxy(`/?p=${params.id}`);
         }
+        // Redirects
+        else if (options.redirects.find(filter)) {
+            return proxy(req.originalUrl);
+        }
+        // General proxy
+        else if (params = filter(options.prefix)) {
+            return proxy(params.join(''));
+        }
 
-        next()
+        next();
     }
 }
 
