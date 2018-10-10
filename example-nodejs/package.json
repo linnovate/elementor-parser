@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "elementor-nodejs": "file:../elementor-nodejs",
+    "express": "^4.16.3"
+  }
+}

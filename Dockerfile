@@ -49,12 +49,10 @@ ENV MYSQL_DATABASE wordpress
 ENV MYSQL_USER wordpress
 ENV MYSQL_PASSWORD wordpress
 
-# RUN	echo "mysql-server mysql-server/root_password password ${MYSQL_ROOT_PASSWORD}" | debconf-set-selections
-# RUN	echo "mysql-server mysql-server/root_password_again password ${MYSQL_ROOT_PASSWORD}" | debconf-set-selections
-# RUN	export DEBIAN_FRONTEND="noninteractive"
-# RUN	apt-get update; \
-# 	apt-get install -y mysql-server; \
-# 	mysql_secure_installation
+RUN	echo "mysql-server mysql-server/root_password password ${MYSQL_ROOT_PASSWORD}" | debconf-set-selections
+RUN	echo "mysql-server mysql-server/root_password_again password ${MYSQL_ROOT_PASSWORD}" | debconf-set-selections
+RUN	export DEBIAN_FRONTEND="noninteractive"
+RUN	apt-get update && apt-get install -y mysql-server
 
 # Install wordpress cli
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
@@ -65,9 +63,11 @@ mv wp-cli.phar /usr/local/bin/wp
 ENV WORDPRESS_VERSION 4.9.8
 ENV WORDPRESS_SHA1 0945bab959cba127531dceb2c4fed81770812b4f
 
-ENV WORDPRESS_DB_HOST localhost
+# ENV WORDPRESS_DB_HOST localhost
 # ENV WORDPRESS_DB_USER wordpress
 # ENV WORDPRESS_DB_PASSWORD wordpress
+
+ENV WORDPRESS_CLIENT_PROXY "/wp"
 
 RUN set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
@@ -77,11 +77,11 @@ RUN set -ex; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 
+COPY mysql-entrypoint.sh /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
-# COPY mysql-entrypoint.sh /usr/local/bin/
 
+RUN chmod +x /usr/local/bin/mysql-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-# RUN chmod +x /usr/local/bin/mysql-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 # ENTRYPOINT ["mysql-entrypoint.sh", "docker-entrypoint.sh"]

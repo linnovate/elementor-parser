@@ -4,8 +4,13 @@ services:
    db:
      image: mysql:5.7
      volumes:
-       - db_data:/var/lib/mysql
+       - ./db_data:/var/lib/mysql
      restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
    wordpress:
      depends_on:
        - db
@@ -15,12 +20,14 @@ services:
        - "8005:80"
      volumes:
       #- ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./plugins:/var/www/html/wp-content/plugins
+      - ./wp-admin:/var/www/html/wp-admin
       - ./elementor_outside:/var/www/html/wp-content/plugins/elementor_outside
      restart: always
      environment:
        WORDPRESS_DB_HOST: db:3306
        WORDPRESS_DB_USER: wordpress
        WORDPRESS_DB_PASSWORD: wordpress
+       # WORDPRESS_CLIENT_PROXY: /wp
 volumes:
     db_data:
-      

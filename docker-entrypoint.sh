@@ -258,9 +258,14 @@ EOPHP
 	done
 fi
 
-
 # Install wp plugin
-cd /var/www/html && wp plugin install elementor --activate  --allow-root
-cd /var/www/html && wp plugin activate elementor_outside  --allow-root
+echo "Install wp plugins: elementor & elementor_outside"
+# cd /var/www/html && wp plugin install elementor --activate  --allow-root
+# cd /var/www/html && wp plugin activate elementor_outside  --allow-root
+
+if [ -n $WORDPRESS_CLIENT_PROXY ]; then
+	echo "Set wp siteurl: $WORDPRESS_CLIENT_PROXY"
+# 	cd /var/www/html && wp option update siteurl "$WORDPRESS_CLIENT_PROXY" --allow-root
+fi
 
 exec "$@"

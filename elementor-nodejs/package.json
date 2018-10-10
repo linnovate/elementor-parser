@@ -1,0 +1,27 @@
+{
+  "name": "elementor-nodejs",
+  "description": "Elementor nodejs",
+  "version": "1.0.0",
+  "contributors": [
+  ],
+  "license": "MIT",
+  "repository": "",
+  "dependencies": {
+    "url-pattern": "^1.0.3",
+    "request": "^2.88.0"
+  },
+  "files": [
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">= 0.6"
+  },
+  "keywords": [
+    "elementor",
+    "editor",
+    "content",
+    "builder"
+  ]
+}
