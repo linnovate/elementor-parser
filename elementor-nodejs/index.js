@@ -5,8 +5,8 @@ function ElementorContent(options) {
 
     const defaultOption = {
         target: null,
-        prefix: /^\/wp\/(.*)$/,
-        prefixRedirect: "/wp",
+        prefix: /^\/elementor\/?(.*)$/,
+        prefixRedirect: "/elementor",
         redirects: [],
         addPath: "/content/add",
         editPath: "/content/:id/edit",
@@ -16,9 +16,11 @@ function ElementorContent(options) {
     options = Object.assign({}, defaultOption, options);
 
     if (!options.target) {
-        console.log("The options 'target' is empty!");
+        console.log("ElementorContent: Fails. \n  The options 'target' is empty!");
         return;
     }
+
+    console.log(`ElementorContent: Succeeded ${Object.keys(options).map(key=>`\n  ${key}: '${options[key]}'`).join('')}!`);
 
     return function(req, res, next) {
 
@@ -35,8 +37,11 @@ function ElementorContent(options) {
                 jar: true,
                 method: req.method
             }, function(error, response, body) {
-                const regExp = new RegExp(options.target,"g");
-                body = body ? body.replace(regExp, options.prefixRedirect) : '';
+                if (body) {
+                    body = body.replace(new RegExp(options.target,"g"), options.prefixRedirect)
+                    body = body.replace(new RegExp(encodeURIComponent(options.target),"g"), encodeURIComponent(options.prefixRedirect));
+//                     body = body.replace(new RegExp('http:\\\\/\\\\/localhost:2222',"g"), '\\'+ options.prefixRedirect);
+                }
                 res.send(body)
             });
         }
@@ -44,20 +49,16 @@ function ElementorContent(options) {
         // Add content
         if (filter(options.addPath)) {
             return res.redirect(`${options.prefixRedirect}/wp-admin/edit.php?action=elementor_outside_new_post`);
-        }
-        // Edit content
+        }// Edit content
         else if (params = filter(options.editPath)) {
             return res.redirect(`${options.prefixRedirect}/wp-admin/post.php?post=${params.id}&action=elementor`);
-        }
-        // View content
+        }// View content
         else if (params = filter(options.viewPath)) {
             return proxy(`/?p=${params.id}`);
-        }
-        // Redirects
+        }// Redirects
         else if (options.redirects.find(filter)) {
             return proxy(req.originalUrl);
-        }
-        // General proxy
+        }// General proxy
         else if (params = filter(options.prefix)) {
             return proxy(params.join(''));
         }

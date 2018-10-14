@@ -24,34 +24,18 @@ add_action( 'init', 'elementor_outside_init' );
 
 
 function elementor_outside_init() {
-// 	$creds = array(
-//         'user_login'    => 'admin',
-//         'user_password' => 'ssWLhDgi3hvwQ!4b5m',
-//         'remember'      => true
-//     );
- 
-//     $user = wp_signon( $creds, false );
- 
-//     if ( is_wp_error( $user ) ) {
-//         echo $user->get_error_message();
-//     }
 
+	// now login user
+	if (!is_user_logged_in()) {
+		// $user = get_user_by("login", 'root' );
+ 		// wp_set_auth_cookie($user->ID);
+		wp_set_auth_cookie(1);
+	}
 
-// 		$user_id = 1;
-// 		$user = get_user_by( 'id', $user_id ); 
-// 		if( $user ) {
-// 			$curr_user=  new WP_User( $user_id , $user->user_login ); 
-// 			wp_set_auth_cookie( $user_id, true );
-// 			do_action( 'wp_login', $user->user_login );
-// 		}
-	
-// 	wp_set_current_user(1);
-    
-//     if ( is_wp_error( $user ) ) {
-//         echo $user->get_error_message();
-//     }
-
-//    $current_user = wp_get_current_user(); 
+	// change 
+	global $wp_rewrite;
+	$wp_rewrite->set_permalink_structure("/%postname%/");
+	$wp_rewrite->flush_rules();
 
 	// remove the admin_bar 
 	// add_filter( 'show_admin_bar', '__return_false' );

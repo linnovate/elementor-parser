@@ -1,32 +1,27 @@
 version: '3.3'
 
 services:
-   db:
-     image: mysql:5.7
-     volumes:
-       - ./db_data:/var/lib/mysql
-     restart: always
-     environment:
-       MYSQL_ROOT_PASSWORD: somewordpress
-       MYSQL_DATABASE: wordpress
-       MYSQL_USER: wordpress
-       MYSQL_PASSWORD: wordpress
-   wordpress:
-     depends_on:
-       - db
+#   db:
+#     image: mysql:5.7
+#     volumes:
+#       - ./db_data:/var/lib/mysql
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: somewordpress
+#       MYSQL_DATABASE: wordpress
+#       MYSQL_USER: wordpress
+#       MYSQL_PASSWORD: wordpress
+   elementor:
+#     depends_on:
+#       - db
      build: .
-     container_name: "elementor_parser"
+     container_name: "elementor"
      ports:
-       - "8005:80"
-     volumes:
-      #- ./config/php.conf.uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      #- ./plugins:/var/www/html/wp-content/plugins
-      #- ./wp-admin:/var/www/html/wp-admin
-      - ./elementor_outside:/var/www/html/wp-content/plugins/elementor_outside
+       - "2222:80"
+     #volumes:
+     # - ./db_data:/var/lib/mysql
      restart: always
      environment:
-       WORDPRESS_DB_HOST: db:3306
-       WORDPRESS_DB_USER: wordpress
-       WORDPRESS_DB_PASSWORD: wordpress
-volumes:
-    db_data:
+       WORDPRESS_URL: http://localhost:2222/
+#volumes:
+#    db_data:
