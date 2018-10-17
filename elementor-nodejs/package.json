@@ -2,13 +2,12 @@
   "name": "elementor-nodejs",
   "description": "Elementor nodejs",
   "version": "1.0.0",
-  "contributors": [
-  ],
+  "contributors": [],
   "license": "MIT",
   "repository": "",
   "dependencies": {
-    "url-pattern": "^1.0.3",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "url-pattern": "^1.0.3"
   },
   "files": [
     "index.js",

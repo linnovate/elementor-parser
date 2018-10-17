@@ -18,10 +18,12 @@ services:
      container_name: "elementor"
      ports:
        - "2222:80"
-     #volumes:
+     volumes:
      # - ./db_data:/var/lib/mysql
+       - ./elementor_outside:/var/www/html/wp-content/plugins/elementor_outside
+       - ./misc.php:/var/www/html/wp-admin/includes/misc.php
      restart: always
      environment:
-       WORDPRESS_URL: http://localhost:2222/
+       WORDPRESS_URL: http://localhost:3001/elementor
 #volumes:
 #    db_data:

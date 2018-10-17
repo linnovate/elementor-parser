@@ -16,11 +16,11 @@ function ElementorContent(options) {
     options = Object.assign({}, defaultOption, options);
 
     if (!options.target) {
-        console.log("ElementorContent: Fails. \n  The options 'target' is empty!");
-        return;
+        return console.log("ElementorContent: Fails. \n  The options 'target' is empty!");
     }
 
-    console.log(`ElementorContent: Succeeded ${Object.keys(options).map(key=>`\n  ${key}: '${options[key]}'`).join('')}!`);
+    console.log("ElementorContent: Succeeded");
+    // console.log(`ElementorContent: Succeeded ${Object.keys(options).map(key=>`\n  ${key}: '${options[key]}'`).join('')}!`);
 
     return function(req, res, next) {
 
@@ -31,19 +31,13 @@ function ElementorContent(options) {
         }
 
         function proxy(uri) {
-            return request({
+            const proxyServer = request({
                 baseUrl: options.target,
                 uri,
-                jar: true,
-                method: req.method
-            }, function(error, response, body) {
-                if (body) {
-                    body = body.replace(new RegExp(options.target,"g"), options.prefixRedirect)
-                    body = body.replace(new RegExp(encodeURIComponent(options.target),"g"), encodeURIComponent(options.prefixRedirect));
-//                     body = body.replace(new RegExp('http:\\\\/\\\\/localhost:2222',"g"), '\\'+ options.prefixRedirect);
-                }
-                res.send(body)
+                followRedirect: false
             });
+            req.pipe(proxyServer);
+            proxyServer.pipe(res)
         }
 
         // Add content
@@ -57,7 +51,7 @@ function ElementorContent(options) {
             return proxy(`/?p=${params.id}`);
         }// Redirects
         else if (options.redirects.find(filter)) {
-            return proxy(req.originalUrl);
+            return proxy(`${options.prefixRedirect}${req.originalUrl}/`);
         }// General proxy
         else if (params = filter(options.prefix)) {
             return proxy(params.join(''));

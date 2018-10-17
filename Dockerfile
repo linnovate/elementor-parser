@@ -22,6 +22,6 @@ ENV WORDPRESS_DB_HOST 127.0.0.1
 ENV WORDPRESS_DB_USER root
 ENV WORDPRESS_DB_PASSWORD wordpress
 ENV WORDPRESS_DB_NAME wordpress
-ENV WORDPRESS_URL http://localhost:2222/
+ENV WORDPRESS_URL http://localhost:3001/elementor
 
 ENTRYPOINT ["docker-entrypoint.sh"]

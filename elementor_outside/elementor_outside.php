@@ -20,8 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-add_action( 'init', 'elementor_outside_init' );
+add_action( 'init', 'elementor_outside_init', 1000 );
 
+remove_action( 'admin_head', 'wp_admin_canonical_url', 10, 1 );
 
 function elementor_outside_init() {
 
@@ -47,7 +48,7 @@ function elementor_outside_init() {
 			[ 'post_type' => 'post' ], 
 			apply_filters( 'elementor/admin/create_new_post/meta', [] )
 		);
-		wp_redirect( $document->get_edit_url() );
+		wp_redirect( $document->get_edit_url(), 301);
 		die;
 	});
 
