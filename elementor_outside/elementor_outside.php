@@ -22,8 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'init', 'elementor_outside_init', 1000 );
 
-remove_action( 'admin_head', 'wp_admin_canonical_url', 10, 1 );
-
 function elementor_outside_init() {
 
 	// now login user
@@ -33,22 +31,35 @@ function elementor_outside_init() {
 		wp_set_auth_cookie(1);
 	}
 
-	// change 
-	global $wp_rewrite;
-	$wp_rewrite->set_permalink_structure("/%postname%/");
-	$wp_rewrite->flush_rules();
+	// remove redirect_canonical
+	remove_filter('template_redirect', 'redirect_canonical');
 
 	// remove the admin_bar 
 	// add_filter( 'show_admin_bar', '__return_false' );
 
-	// action tag for a new post
-	add_action( 'admin_action_elementor_outside_new_post', function() {
+	// Set Rewrite All posts and clean url's for create and edit post
+	global $wp_rewrite;
+	$wp_rewrite->set_permalink_structure("/%postname%/");
+// 	$wp_rewrite->add_rule( '^create_elementor_post/?$', 'wp-admin/edit.php?action=create_elementor_post', 'top' );
+// 	$wp_rewrite->add_rule( '^edit_elementor_post/([^/]+)/?$', 'wp-admin/post.php?postname=$matches[1]&action=edit_elementor_post', 'top' );
+	$wp_rewrite->flush_rules();
+
+	// action tag for create post
+	add_action( 'admin_action_create_elementor_post', function() {
 		$document = Plugin::$instance->documents->create( 
 			'post',
 			[ 'post_type' => 'post' ], 
 			apply_filters( 'elementor/admin/create_new_post/meta', [] )
 		);
-		wp_redirect( $document->get_edit_url(), 301);
+		wp_redirect( $document->get_edit_url());
+		die;
+	});
+
+	// action tag for edit post
+	add_action( 'admin_action_edit_elementor_post', function() {
+		$post = get_page_by_title($_REQUEST['postname'], OBJECT, 'post');
+		$document = Plugin::$instance->documents->get( $post->ID );
+		wp_redirect( $document->get_edit_url());
 		die;
 	});
 
@@ -67,5 +78,6 @@ function elementor_outside_init() {
 		$document->remove_control('template_default_description');
 		$document->remove_control('template_canvas_description');
 	});
+	
 }
 	

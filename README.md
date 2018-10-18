@@ -1,31 +1,49 @@
 # elementor-parser
 
 ## Install
-docker-compose up -d // setup localhost:2222
+```sh
+docker-compose up -d // "elementor-parser" listening on port 3005!
 
-cd example-nodejs && node server.js // setup localhost:3001
+cd example-nodejs
+npm install
+node server.js // "node" listening on port 3001!
+```
 
-## use
+## Default options
 
-### Add content:
-[host]/content/add
-### Edit content:
-[host]/content/%id%/edit
-### View content:
-[host]/content/%postname%
-### Get delete:
-soon - [host]/elementor/%id%/delete
+```js
+defaultOptions = {
+    target: null,
+    prefix: /^\/elementor\/?(.*)$/,
+    prefixRedirect: "/elementor",
+    redirects: [],
+    addPath:  "/create_elementor_post",
+    editPath: "/edit_elementor_post/:postname",
+    viewPath: "/elementor_post/:postname",
+};
 
-# setup by node
+```
 
-    const app = require('express')();
-    const elementorContent = require('../elementor-nodejs');
+## Usage by nodejs
 
-    app.use(elementorContent({ 
-        target: "http://localhost:2222",
-        redirects: ["/about", "/contact"],
-    }));
+```js
+const app = require('express')();
+const elementorContent = require('../elementor-nodejs');
 
-    app.listen(3001, function() {
-        console.log(`Example app listening on port 3001!`);
-    })
+app.use(elementorContent({ 
+    // Option
+    target: [elementor-parser-server],
+    redirects: [/\/about\/?/, "/contact"], // ex.
+}));
+
+```
+
+## Setup "Elementor-parser"
+```sh
+$ docker build . -t elementor-parser
+$ docker run -p [port]:80 \
+             -e PROXY_FROM=[proxy_from_location] \
+             --name elementor \
+             -d \
+             elementor-parser
+```
